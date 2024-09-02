@@ -1,0 +1,14 @@
+package days01;
+
+public class Ex01 {
+
+	public static void main(String[] args) {
+		System.out.println("hello worlds");
+		System.out.println("살려주세요");
+		
+		
+	} 
+
+}
+
+// JDBCClass 폴더 생성 -> 이클립스 실행 설정 (폰트 jdk..) -> JAVA 프로젝트 생성 -> jdbcPro -> 
