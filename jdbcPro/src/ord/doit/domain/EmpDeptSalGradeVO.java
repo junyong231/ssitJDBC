@@ -1,0 +1,42 @@
+package ord.doit.domain;
+
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ * @author User
+ *
+ */
+
+//롬복도 복습...
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder 
+public class EmpDeptSalGradeVO {
+//	private DeptVO dvo;
+//	private EmpVO evo;  이렇게 통쨰로 해도 되지만 불필요한 정보가..
+	
+	private int empno;
+	private String ename;
+	private LocalDateTime hiredate; 
+	private double pay;
+	private String dname;
+	private int grade;
+	
+}   //class
+
+
+
+
+
+
+

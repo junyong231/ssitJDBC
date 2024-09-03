@@ -1,0 +1,97 @@
+package days02;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import com.util.DBConn;
+
+import ord.doit.domain.EmpDeptSalGradeVO;
+import ord.doit.domain.EmpDeptSalGradeVO2;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 3. 오후 12:36:41
+ * @subject : 
+ * @content:
+ * 
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		/*
+		[실행결과]
+		1등급   (     700~1200 ) - 2명                        key
+		      20   RESEARCH   7369   SMITH   800               value
+		      30   SALES         7900   JAMES   950
+		2등급   (   1201~1400 ) - 2명
+		   30   SALES   7654   MARTIN   2650
+		   30   SALES   7521   WARD      1750   
+		3등급   (   1401~2000 ) - 2명
+		   30   SALES   7499   ALLEN      1900
+		   30   SALES   7844   TURNER   1500
+		4등급   (   2001~3000 ) - 4명
+		    10   ACCOUNTING   7782   CLARK   2450
+		   20   RESEARCH   7902   FORD   3000
+		   20   RESEARCH   7566   JONES   2975
+		   30   SALES   7698   BLAKE   2850
+		5등급   (   3001~9999 ) - 1명   
+		   10   ACCOUNTING   7839   KING   5000
+		*/      
+
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql  =" SELECT grade, losal || '~' || hisal ,COUNT( grade ) " 
+							+ " FROM emp e JOIN dept d ON e.deptno = d.deptno "
+							+ " JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal "
+							+ " GROUP BY grade,losal,hisal "
+							+ " ORDER BY grade" ;
+		int grade;
+		int cg;
+
+		ArrayList<EmpDeptSalGradeVO2> list = new ArrayList<>();
+		EmpDeptSalGradeVO2 vo;
+		
+		
+		try {
+
+			conn = DBConn.getConnection();
+			stmt = conn.createStatement(); //일꾼 객체 생성
+			rs = stmt.executeQuery(sql); 
+
+			while ( rs.next() ) {
+				grade = rs.getInt("grade");
+				cg = rs.getInt("cg");
+				
+
+				vo = new EmpDeptSalGradeVO2( grade , cg);
+				list.add(vo);
+
+
+			}//while
+
+			list.forEach(evo->System.out.println(evo));
+
+
+		}
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); //닫는 순서 중요
+				stmt.close(); //일꾼도 닫아줘야함
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+	}//main
+
+}//class

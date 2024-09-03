@@ -1,0 +1,150 @@
+package days02;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+import com.util.DBConn;
+
+import ord.doit.domain.DeptVO;
+import ord.doit.domain.EmpVO;
+
+/**
+ *  [jdbc] org.doit.domain.DeptVO.java
+ *  1. SELECT * FROM dept 쿼리 실행 ArrayList<DeptVO> deptlist
+ *  2. 부서정보 출력
+ *  3. 부서번호를 선택하세요 ? 10, 20..
+ *  4. SELECT * FROM emp WHERE deptno = 선택한 번호
+ *  5. ArrayList<EmpVO> emplist 저장
+ *  6. 해당 사원의 정보를 출력
+ *
+ */
+public class Ex02 {
+
+	public static void main(String[] args) {
+		String sql = " SELECT * " + " FROM dept ";
+		ArrayList<DeptVO> deptlist = null;
+		ArrayList<EmpVO> emplist = new ArrayList<EmpVO>();
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		//DeptVO 에 저장할 애들
+		int deptno;
+		String dname;
+		String loc;
+		//EmpVO 에 저장할 애들
+		int empno;
+	    String ename;
+		String job;
+		int mgr;
+		LocalDateTime hiredate; 
+		double sal;
+		double comm;
+		
+		EmpVO evo = null;
+		DeptVO dvo = null;
+		
+		// 1+2작업 합친거
+		conn = DBConn.getConnection();
+		// 3번 작업 + 트라이 캐치
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql); 
+			if ( rs.next()) {
+				deptlist = new ArrayList<DeptVO>();
+				do {
+				deptno = rs.getInt("deptno");
+				dname = rs.getString("dname");
+				loc = rs.getString("loc");
+				
+		//		dvo = new DeptVO ( deptno, dname, loc);
+				dvo = new DeptVO().builder()
+						            .deptno(deptno)
+						            .dname(dname)
+						            .loc(loc)
+						            .build();
+				
+				deptlist.add(dvo);
+						
+				//@빌더
+				} while (rs.next());
+				
+				deptlist.forEach( vo->System.out.println(vo) );
+				
+				
+			}//if
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("> 부서 번호를 입력하세요 ? "); 
+		Scanner sc = new Scanner(System.in);
+		//deptno = sc.nextInt();
+		String deptnos = sc.next();
+		
+		 sql = String.format(" SELECT * "			// 10 , 20 이렇게 해도 되게 하려면? - 쿼리 IN 구문
+		      + " FROM emp " 
+		      + " WHERE deptno IN ( %s )" , deptnos );
+		      
+		 System.out.println(sql);
+			//+ " WHERE deptno = " + deptno;
+		
+		 //ex01_04 try/catch 복붙 - 싱글톤 - 있어도 없어도 좋다 ..?
+			try {
+
+				conn = DBConn.getConnection();
+				stmt = conn.createStatement(); //일꾼 객체 생성
+				rs = stmt.executeQuery(sql); 
+
+				while ( rs.next() ) {
+					empno = rs.getInt("empno");
+					ename = rs.getString("ename");
+					job = rs.getString("job");
+					mgr = rs.getInt("mgr");
+					hiredate = rs.getTimestamp("hiredate").toLocalDateTime();
+					sal = rs.getInt("sal");
+					comm = rs.getDouble("comm");
+					deptno = rs.getInt("deptno");
+
+					evo = new EmpVO(empno, ename, job, mgr, hiredate, sal, comm, deptno);
+					emplist.add(evo); //여기만 이름맞게 수정
+
+
+				}//while
+				Ex01_04.dispEmp(emplist);//여기도 이름맞게 수정 + public static이라 가져오기 가능
+			}
+
+			catch (SQLException e) {
+
+				e.printStackTrace();
+			} finally {
+				try {
+					rs.close(); //닫는 순서 중요
+					stmt.close(); //일꾼도 닫아줘야함
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		
+		
+		//4번 작업
+		DBConn.close(); 
+		
+		
+	}//main
+
+	
+	
+}//class

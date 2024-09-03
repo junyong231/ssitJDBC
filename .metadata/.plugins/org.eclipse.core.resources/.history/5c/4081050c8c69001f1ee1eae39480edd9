@@ -1,0 +1,81 @@
+package days02;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
+
+ 
+
+//192.168.10.162 --쌤거 이거 local에 넣으면 됨
+public class Ex01 {
+
+	public static void main(String[] args) {
+		 
+		//1. JDBC 로딩
+		String className = "oracle.jdbc.driver.OracleDriver";
+		String url =  "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "SCOTT";
+		String password= "TIGER";
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql  = " SELECT * "				
+				+ " FROM emp ";
+
+		//테이블 자료형대로 맞추기 ( 숫자 스트링주거나 해도 되긴함)
+		int empno;
+		String ename;
+		String job;
+		int mgr;
+		Date hiredate; //String, LocalDateTime도 됨
+		double sal;
+		double comm;
+		int deptno;
+
+
+		try {
+			//1. jdbc 드라이버 로딩 class.forname
+			Class.forName(className);
+			//2. connection 객체 drivermanager
+			conn = DriverManager.getConnection(url,user,password);
+			//CRUD 작업 -- statement 객체
+			stmt = conn.createStatement(); //일꾼 객체 생성
+			// int stmt.executeUpdate(sql); //insert,update,delete
+			rs = stmt.executeQuery(sql); 
+			//select 
+
+			while ( rs.next() ) {
+				//rs.getInt(1);
+				empno = rs.getInt("empno");
+				ename = rs.getString("ename");
+				job = rs.getString("job");
+				
+
+				System.out.printf("%d\t%s\t%s\n", empno,ename,job);
+			}
+
+
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); //닫는 순서 중요
+				stmt.close(); //일꾼도 닫아줘야함
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+
+	}//main
+
+}//class

@@ -1,0 +1,22 @@
+package days02;
+
+/**
+ *  [jdbc] org.doit.domain.DeptVO.java
+ *  1. SELECT * FROM dept 쿼리 실행 ArrayList<DeptVO> deptlist
+ *  2. 부서정보 출력
+ *  3. 부서번호를 선택하세요 ? 10, 20..
+ *  4. SELECT * FROM emp WHERE deptno = 선택한 번호
+ *  5. ArrayList<EmpVO> emplist 저장
+ *  6. 해당 사원의 정보를 출력
+ *
+ */
+public class Ex02 {
+
+	public static void main(String[] args) {
+
+
+	}//main
+
+	
+	
+}//class

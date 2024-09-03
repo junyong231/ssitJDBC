@@ -1,0 +1,101 @@
+package days02;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import com.util.DBConn;
+
+import ord.doit.domain.EmpDeptSalGradeVO;
+import ord.doit.domain.EmpVO;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 3. 오후 12:34:12
+ * @subject :  [jdbc] emp+dept+salgrade => EmpDeptSalGradeVO
+ * @content:
+ * 
+ */
+public class Ex03 {
+
+	public static void main(String[] args) {
+
+	/*
+		--사원번호 사원명 부서명 입사일자, pay, 등급 조회? => 조인 (emp, dept,salgrade)
+
+				SELECT empno, ename, dname, hiredate, sal+NVL(comm,0) pay
+				FROM emp e JOIN dept d ON e.deptno = d.deptno
+				                JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal;
+				-- 각각의 VO객체를 만드는게 아니라 얘넬 받는 VO를 만들면 됨..
+*/
+		
+		//Ex01_04 일단 메인함수 전부 복붙
+		
+		
+		//1. JDBC 로딩
+		//		String className = "oracle.jdbc.driver.OracleDriver";
+		//		String url =  "jdbc:oracle:thin:@localhost:1521:xe";
+		//		String user = "SCOTT";
+		//		String password= "TIGER";
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql  ="SELECT empno, ename, dname, hiredate, sal+NVL(comm,0) pay, grade "
+							+ " FROM emp e JOIN dept d ON e.deptno = d.deptno "
+							+ " JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal" ;
+
+		int empno;
+		String ename;
+		LocalDateTime hiredate; 
+		double pay;
+		String dname;
+		int grade;
+
+		ArrayList<EmpDeptSalGradeVO> list = new ArrayList<>();
+		EmpDeptSalGradeVO vo;
+
+		try {
+
+			conn = DBConn.getConnection();
+			stmt = conn.createStatement(); //일꾼 객체 생성
+			rs = stmt.executeQuery(sql); 
+
+			while ( rs.next() ) {
+				empno = rs.getInt("empno");
+				ename = rs.getString("ename");
+				dname = rs.getString("dname");
+				hiredate = rs.getTimestamp("hiredate").toLocalDateTime();
+				pay = rs.getInt("pay");
+				grade = rs.getInt("grade");
+
+				vo = new EmpDeptSalGradeVO(empno, ename,hiredate, pay, dname, grade);
+				list.add(vo);
+
+
+			}//while
+
+			list.forEach(evo->System.out.println(evo));
+
+
+		}
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); //닫는 순서 중요
+				stmt.close(); //일꾼도 닫아줘야함
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+
+	}//main
+
+}//class

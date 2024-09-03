@@ -1,0 +1,25 @@
+package days02;
+
+/**
+ * [jdbc] emp+dept+salgrade => EmpDeptSalGradeVO
+ *
+ */
+public class Ex03 {
+
+	public static void main(String[] args) {
+
+	/*
+		--사원번호 사원명 부서명 입사일자, pay, 등급 조회? => 조인 (emp, dept,salgrade)
+
+				SELECT empno, ename, dname, hiredate, sal+NVL(comm,0) pay
+				FROM emp e JOIN dept d ON e.deptno = d.deptno
+				                JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal;
+				-- 각각의 VO객체를 만드는게 아니라 얘넬 받는 VO를 만들면 됨..
+*/
+		
+		
+		
+
+	}//main
+
+}//class

@@ -1,0 +1,126 @@
+package days02;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import com.util.DBConn;
+
+import ord.doit.domain.EmpDeptSalGradeVO;
+import ord.doit.domain.EmpDeptSalGradeVO2;
+import ord.doit.domain.EmpVO;
+
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 3. 오후 12:36:41
+ * @subject : 
+ * @content:
+ * 
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		
+		String sql = " SELECT grade,  losal, hisal ,COUNT( grade ) " 
+							+" FROM emp e JOIN dept d ON e.deptno = d.deptno "
+                			+" JOIN salgrade s ON e.sal BETWEEN s.losal AND s.hisal "
+							+" GROUP BY grade,losal,hisal "
+							+" ORDER BY grade "; 
+
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql  = " SELECT * "				
+				+ " FROM emp ";
+
+		//테이블 자료형대로 맞추기 ( 숫자 스트링주거나 해도 되긴함)
+		int empno;
+		String ename;
+		String job;
+		int mgr;
+		//String hiredate; //Date, String, LocalDateTime도 됨
+		LocalDateTime hiredate; 
+		double sal;
+		double comm;
+		int deptno;
+
+		ArrayList<EmpVO> list = new ArrayList<EmpVO>();
+		EmpVO vo;
+
+		try {
+			//			//1. jdbc 드라이버 로딩 class.forname
+			//			Class.forName(className);
+			//			//2. connection 객체 drivermanager
+			//			conn = DriverManager.getConnection(url,user,password);
+			//CRUD 작업 -- statement 객체 
+
+			//DBConn 있으니 이제 필요없다
+
+
+			conn = DBConn.getConnection();
+
+			stmt = conn.createStatement(); //일꾼 객체 생성
+			rs = stmt.executeQuery(sql); 
+
+			while ( rs.next() ) {
+				empno = rs.getInt("empno");
+				ename = rs.getString("ename");
+				job = rs.getString("job");
+				mgr = rs.getInt("mgr");
+				hiredate = rs.getTimestamp("hiredate").toLocalDateTime();
+				sal = rs.getInt("sal");
+				comm = rs.getDouble("comm");
+				deptno = rs.getInt("deptno");
+
+				vo = new EmpVO(empno, ename, job, mgr, hiredate, sal, comm, deptno);
+				list.add(vo);
+
+				//				System.out.printf("%d\t %s\t %s\t %d\t %tF\t %d\t %f\t %s\n", empno, ename, job, mgr, hiredate, sal, comm, deptno); // %tF
+
+				// 0.0000 말고 NULL 찍으려면 ??
+
+			}//while
+
+			dispEmp(list);
+
+
+		}
+
+		catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close(); //닫는 순서 중요
+				stmt.close(); //일꾼도 닫아줘야함
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}//main
+
+}//class
+/*
+[실행결과]
+1등급   (     700~1200 ) - 2명                        key
+      20   RESEARCH   7369   SMITH   800               value
+      30   SALES         7900   JAMES   950
+2등급   (   1201~1400 ) - 2명
+   30   SALES   7654   MARTIN   2650
+   30   SALES   7521   WARD      1750   
+3등급   (   1401~2000 ) - 2명
+   30   SALES   7499   ALLEN      1900
+   30   SALES   7844   TURNER   1500
+4등급   (   2001~3000 ) - 4명
+    10   ACCOUNTING   7782   CLARK   2450
+   20   RESEARCH   7902   FORD   3000
+   20   RESEARCH   7566   JONES   2975
+   30   SALES   7698   BLAKE   2850
+5등급   (   3001~9999 ) - 1명   
+   10   ACCOUNTING   7839   KING   5000
+*/      

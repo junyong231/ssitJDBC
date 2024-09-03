@@ -1,0 +1,5 @@
+package ord.doit.domain;
+
+public class EmpVO {
+
+}

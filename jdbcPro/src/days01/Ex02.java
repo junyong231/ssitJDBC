@@ -12,8 +12,8 @@ public class Ex02 {
        
       String className  = "oracle.jdbc.driver.OracleDriver";
       String url = "jdbc:oracle:thin:@localhost:1521:xe";
-      String user = "SCOTT";
-      String password = "TIGER";
+      String user = "SCOT";
+      String password = "tiger";
       Connection conn = null;
       Statement stmt = null; // 배달의 민족.
       ResultSet rs = null;
