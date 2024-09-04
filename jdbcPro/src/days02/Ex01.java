@@ -19,9 +19,9 @@ public class Ex01 {
 		String url =  "jdbc:oracle:thin:@localhost:1521:xe";
 		String user = "SCOTT";
 		String password= "TIGER";
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
+		Connection conn = null; //저그 커널
+		Statement stmt = null; // 드론
+		ResultSet rs = null; // 결과 받아두는 곳
 		String sql  = " SELECT * "				
 				+ " FROM emp ";
 
@@ -61,7 +61,6 @@ public class Ex01 {
 				System.out.printf("%d\t%s\t%s\t%d\t%s\t%f\t%s\n", empno,ename,job,mgr,hiredate.substring(0, 10),comm,deptno); //substring으로 자름
 				// 0.0000 말고 NULL 찍으려면 ??
 			}
-
 
 		} catch (ClassNotFoundException e) {
 

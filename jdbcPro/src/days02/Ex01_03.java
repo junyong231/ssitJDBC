@@ -36,8 +36,7 @@ public class Ex01_03 {
 		double sal;
 		double comm;
 		int deptno;
-
-
+		
 		try {
 			//1. jdbc 드라이버 로딩 class.forname
 			Class.forName(className);

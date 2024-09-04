@@ -1,0 +1,24 @@
+package days03;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오후 3:38:14
+ * @subject :
+ * @content:
+ * // [저장 프로시저]   - 입력받은 ID를 사용 여부 체크하는 프로시저
+      //       ㄴ 회원가입
+      //             아이디 : [   hong     ] <ID중복체크버튼> : 한 프로시저에 넣는게 아니고 아이디 중복체크할 때마다 누르니까 똑같이 프로시저도 나눠야함
+      //             비밀번호      
+      //             이메일
+      //             주소
+      //             연락처
+      //             등등
+ */
+public class Ex05 {
+
+	public static void main(String[] args) {
+	
+
+	}//main
+
+}//class

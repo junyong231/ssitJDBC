@@ -1,0 +1,19 @@
+package days03;
+
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오후 5:31:25 
+ * @subject : 부서추가 (EX01) 프로시저로 해보기 
+ * @content:
+ * 
+ */
+public class Ex07_03 {
+
+	public static void main(String[] args) {
+		 
+	
+
+	}//main
+
+}//class

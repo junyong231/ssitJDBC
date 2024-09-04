@@ -1,0 +1,19 @@
+package days03;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오후 4:39:41
+ * @subject : [ jdbc ] select dept 
+ * @content:
+ * 
+ */
+public class Ex07 {
+
+	public static void main(String[] args) {
+		
+		
+		
+
+	}//main
+
+}//class

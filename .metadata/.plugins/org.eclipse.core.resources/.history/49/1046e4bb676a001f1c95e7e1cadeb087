@@ -1,0 +1,118 @@
+package days03;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import com.util.DBConn;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오전 11:15:31
+ * @subject : 자바 리플렉션 (- 반사, 상, 반영)
+ * @content:  JDBC 리플렉션 ? 결과물(rs)에 대한 정보를 추출해서 사용하는 기술
+ * 						1) scott이 소유하고 있는 모든 테이블 목록 출력 (조회)
+ * 						2) scott가 소유하고 있는 테이블 선택(입력) 받아서 선택된 테이블의 정보를 조회.
+ */
+public class Ex03 {
+
+	public static void main(String[] args) {
+		
+		String sql = " SELECT table_name "
+							+" FROM tabs" ;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<String> tnList = new ArrayList<>();
+		String tableName = null;
+		
+		//1,2번 작업
+		try {
+			conn = DBConn.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				tableName = rs.getString("table_name");
+				tnList.add(tableName);
+			}//while
+			System.out.println(tnList.toString());
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+//		finally {
+//			//4번
+//			try {
+//				rs.close();
+//				pstmt.close();
+//				DBConn.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//
+//	  }//f
+//		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("> 조회할 테이블 이름 입력 ?");
+		tableName = sc.next();
+		
+		// sql = " SELECT * FROM ? ";  - 테이블,컬럼명은 ? 으로 못받음
+		sql = " SELECT * FROM " + tableName;
+		// 그런데 테이블마다 컬럼 갯수 타입이 다른데 어떡함? => 리플렉션
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+		ResultSetMetaData rsmd =  rs.getMetaData(); //메타데이터 가져온단 거겠네
+		//컬럼수 몇개인지 출력?
+		int columnCount = rsmd.getColumnCount();
+		System.out.println( rsmd );
+		
+		System.out.println("-".repeat(columnCount * 7));
+		
+		
+//		for (int i = 0; i < columnCount; i++) {
+//			String columnName = rsmd.getColumnName(i+1);
+//			int columnType = rsmd.getColumnType(i+1);
+//			String columnTypeName = rsmd.getColumnName(i+1);
+//			int p = rsmd.getPrecision(i+1);
+//			int s = rsmd.getScale(i+1);
+//			
+//			if (columnType == 2) { // EMP 기준 NUMBER
+//				System.out.printf("%s\t%d\t%s(%d, %d)\n " , columnName, columnType, columnTypeName, p, s );
+//			}else if ( columnType == 12) {
+//				System.out.printf("%s\t%d\t%s(%d)\n " , columnName, columnType, columnTypeName,p);
+//			}
+//			else {
+//				System.out.printf("%s\t%d\t%s\n " , columnName, columnType, columnTypeName);
+//			}
+//
+//		} //for
+		
+		for (int i = 1; i <= columnCount; i++) {
+			String columnName = rsmd.getColumnName(1);
+		}
+		
+		
+		
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			//4번
+			try {
+				rs.close();
+				pstmt.close();
+				DBConn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}//main
+
+}//class

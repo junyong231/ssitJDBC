@@ -1,0 +1,19 @@
+package days03;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오전 10:48:19
+ * @subject : [jdbc] 트랜잭션 처리
+ * @content:
+ * 
+ */
+public class Ex02 {
+
+	public static void main(String[] args) {
+
+		
+		
+		
+	}//main
+
+}//class

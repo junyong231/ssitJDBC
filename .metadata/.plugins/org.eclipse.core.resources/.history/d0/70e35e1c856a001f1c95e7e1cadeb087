@@ -1,0 +1,234 @@
+package days03;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.util.DBConn;
+
+import ord.doit.domain.DeptVO;
+import ord.doit.domain.EmpVO;
+
+
+public class Ex04 {
+
+	public static void main(String[] args) {
+		/*
+		String sql =" SELECT NVL(d.dname, 'NULL') AS dname, NVL(d.deptno, 0) AS deptno, COUNT(e.empno) AS su "
+						+ " FROM emp e LEFT JOIN dept d ON e.deptno = d.deptno "
+						+ " GROUP BY dname, d.deptno ";
+
+					
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<EmpVO2> dinfo = new ArrayList<>();
+		EmpVO2 vo = null;
+		
+		conn = DBConn.getConnection();
+		
+		String dname ;
+		int deptno, su;
+		
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				dname = rs.getString("dname");
+				deptno = rs.getInt("deptno");
+				su = rs.getInt("su");
+				
+				vo = new EmpVO2().builder()
+		                   .dname(dname)
+		                   .deptno(deptno)
+		                   .su(su)
+		                   .build();
+				System.out.printf("%s ( %d ) : %d 명\n", vo.getDname(), vo.getDeptno() , vo.getSu() );
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+		*/
+		
+		//풀이
+		
+		String deptSql = " SELECT d.deptno ,dname, COUNT(empno) cnt "
+				+ " FROM dept d FULL JOIN emp e ON d.deptno = e.deptno "
+				+ " GROUP BY dname, d.deptno ";
+		String empSql = " SELECT empno, ename, hiredate, sal+NVL(comm,0) pay "
+				+ " FROM emp "
+				+ " WHERE deptno = ?  ";
+		
+		Connection conn = null;
+		PreparedStatement deptPstmt = null, empPstmt = null ;
+		ResultSet deptRs = null, empRs = null ;
+		DeptVO dvo = null;
+		EmpVO evo = null;
+		ArrayList<EmpVO> empList = null;
+		
+		LinkedHashMap<DeptVO, ArrayList<EmpVO>> lhMap = new LinkedHashMap<>();
+		//결과물 통쨰로 이 맵 객체에 저장
+		conn = DBConn.getConnection();
+		  int deptno, cnt;
+	      String dname;
+
+	      int empno;
+	      String ename;
+	      LocalDateTime hiredate;
+	      double pay;
+	      
+	      
+	      try {
+	          deptPstmt = conn.prepareStatement(deptSql);
+	          deptRs = deptPstmt.executeQuery();
+	          
+	          //while문 안에서 사원정보 쿼리 날리면 됨
+	          while (deptRs.next()) {
+	             deptno = deptRs.getInt("deptno");
+	             dname = deptRs.getString("dname");
+	             cnt = deptRs.getInt("cnt");            
+	             dvo = new DeptVO(deptno, dname, null, cnt);            
+	             //System.out.printf("%s(%d명) \n", dvo.getDname(), dvo.getCnt());
+	             
+	            //여기임!
+	            empPstmt = conn.prepareStatement(empSql);
+	            empPstmt.setInt(1, deptno);
+		        empRs = empPstmt.executeQuery();
+	             if (empRs.next()) {
+	            	 empList = new ArrayList<EmpVO>();
+	            	 empno = empRs.getInt("empno");
+	            	 ename = empRs.getString("ename");
+	            	 hiredate = empRs.getTimestamp("hiredate").toLocalDateTime();
+	            	 pay = empRs.getDouble("pay"); //sal에다가 저장 (어차피 자료형 같으니까)
+	            	 
+	            	 do {
+	            		 evo = new EmpVO().builder()
+	            				 .empno(empno)
+	            				 .ename(ename)
+	            				 .hiredate(hiredate)
+	            				 .sal(pay)
+	            				 .build();
+	            		 empList.add(evo);
+						
+					} while (empRs.next());
+	            	 
+				}//if
+	             
+	             //해당 부서의 사원 조회 완료
+	             //Map k,v 엔트리 추가
+	             
+	             lhMap.put(dvo, empList);
+	             
+	          } // while
+	       } catch (SQLException e) { 
+	          e.printStackTrace();
+	       } finally {
+	          try {
+	             deptRs.close();  
+	             deptPstmt.close();
+	          } catch (SQLException e) { 
+	             e.printStackTrace();
+	          }
+	       }//f
+
+
+	      DBConn.close();
+		
+		dispLHMap(lhMap);
+		
+		
+	}//main
+
+//	private static void dispLHMap(LinkedHashMap<DeptVO, ArrayList<EmpVO>> lhMap) {
+//		//키 밸류 한 쌍 = 엔트리 / 의 모임 엔트리셋
+//		Set<Entry<DeptVO, ArrayList<EmpVO>>>  eset = lhMap.entrySet();
+//		Iterator<Entry<DeptVO, ArrayList<EmpVO>>> eir = eset.iterator();
+//		while (eir.hasNext()) {
+//			Entry<DeptVO, ArrayList<EmpVO>> entry = eir.next();
+//			DeptVO dvo = entry.getKey();
+//			System.out.printf("%s(%d명) \n", dvo.getDname(), dvo.getCnt());
+//			
+//			ArrayList<EmpVO> empList = entry.getValue();
+//			Iterator<EmpVO> ir = empList.iterator();
+//			while (ir.hasNext()) {
+//				 EmpVO evo =  ir.next();
+//				//empno ename hiredate pay 형태 출력
+//				System.out.printf("%d\t%s\t%tF\t%.2f\n", evo.getEmpno(), evo.getEname(), evo.getHiredate(), evo.getSal()  );
+//				
+//			}
+//		}//while
+//		
+//	}
+	   private static void dispLHMap(LinkedHashMap<DeptVO, ArrayList<EmpVO>> lhMap) {
+		      
+		      Set<Entry<DeptVO, ArrayList<EmpVO>>>  eset = lhMap.entrySet();
+		      Iterator<Entry<DeptVO, ArrayList<EmpVO>>> eir = eset.iterator();
+		      while (eir.hasNext()) {
+		         Entry<DeptVO, ArrayList<EmpVO>> entry = eir.next();
+		          DeptVO dvo = entry.getKey();
+		          // ACCOUNTING(2명) 
+		          System.out.printf("%s(%d명) \n", dvo.getDname(), dvo.getCnt());
+		          
+		          ArrayList<EmpVO> empList = entry.getValue();
+		          Iterator<EmpVO> ir = empList.iterator();
+		          while (ir.hasNext()) {
+		            EmpVO evo =  ir.next();
+		            // empno ename hiredate pay
+		            System.out.printf("\t%d\t%s\t%tF\t%.2f\n", 
+		               evo.getEmpno(), evo.getEname(), evo.getHiredate()
+		               , evo.getSal()   );
+		         } // while
+		         
+		      } // while
+		      
+		      
+		   }
+
+	
+}//class
+
+
+
+/*
+[실행결과]
+ACCOUNTING(3) 인원수임
+empno ename hiredate pay
+empno ename hiredate pay
+empno ename hiredate pay
+RESEARCH(3)
+empno ename hiredate pay
+empno ename hiredate pay
+empno ename hiredate pay
+SALES(6)
+empno ename hiredate pay
+empno ename hiredate pay
+empno ename hiredate pay
+empno ename hiredate pay
+empno ename hiredate pay
+empno ename hiredate pay
+OPERATIONS(1)
+empno ename hiredate pay 
+NULL(1)
+empno ename hiredate pay
+*/

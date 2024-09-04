@@ -1,0 +1,73 @@
+package days03;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.util.DBConn;
+
+import oracle.jdbc.OracleTypes;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오후 4:39:41
+ * @subject : [ jdbc ] select dept 
+ * @content:
+ * 
+ */
+public class Ex07 {
+
+	public static void main(String[] args) {
+
+		String sql = " { call up_selectdept( ? ) }";
+
+		Connection conn = null;
+		CallableStatement cstmt = null;
+
+		conn = DBConn.getConnection();
+
+		ResultSet rs = null;
+		try {
+			cstmt = conn.prepareCall(sql);
+			// IN ? OUT ?
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery(); //SELECT니까
+			rs = (ResultSet) cstmt.getObject(1);
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				cstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}//f
+
+
+		DBConn.close();
+
+
+
+	}//main
+
+}//class
+/*
+CREATE OR REPLACE PROCEDURE up_selectDept
+(
+    pdeptcursor OUT SYS_REFCURSOR
+
+)
+IS 
+
+BEGIN
+    OPEN pdeptcursor FOR 
+    SELECT *
+    FROM dept;
+
+--EXCEPTION
+
+END;
+ */

@@ -1,0 +1,46 @@
+package days03;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 4. 오전 10:48:19
+ * @subject : [jdbc] 트랜잭션 처리
+ * @content: 논리적인 작업 단위 ( 모두완료/ 모두취소 )
+ * 						예) 계좌 이체
+ * 						A UPDATE
+ * 						B UPDATE
+ * 						는  ( 모두완료/ 모두취소 ) 여야함.		완료시 COMMIT/ 실패시 ROLLBACK
+ * 
+ * 오라클에선 저장프로시저에서 
+ * BEGIN
+ * 		1) UPDATE		INSERT	
+ * 		2) UPDATE		INSERT	
+ * EXCEPTION
+ * 		WHEN ㅁㅁㅁ THEN 
+ * 				ROLLBACK;
+ * END;
+ * 
+ * 자바에서는   
+ * try
+ * 
+ * 		1) UPDATE		INSERT	50 (O)
+ * 		2) UPDATE		INSERT	50 (X 유니크 위배)  => 결론적으로 실패 롤백.
+ * 
+ * 		COMMIT;
+ * catch
+ * 		ROLLBACK;
+ * 
+ * 
+ * 
+ * 
+ */
+public class Ex02 {
+
+	public static void main(String[] args) {
+		
+		
+		
+		
+		
+	}//main
+
+}//class
