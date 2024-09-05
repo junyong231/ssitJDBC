@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="BoardServiceTEST" project="jdbcPro" tests="2" started="2" failures="0" errors="0" ignored="0">
-  <testsuite name="days04.boardTEST.BoardServiceTEST" time="0.047" displayname="BoardServiceTEST" uniqueid="[engine:junit-jupiter]/[class:days04.boardTEST.BoardServiceTEST]">
-    <testcase name="testInsert" classname="days04.boardTEST.BoardServiceTEST" time="0.047" displayname="testInsert()" uniqueid="[engine:junit-jupiter]/[class:days04.boardTEST.BoardServiceTEST]/[method:testInsert()]"/>
-    <testcase name="testSelect" classname="days04.boardTEST.BoardServiceTEST" time="0.0" displayname="testSelect()" uniqueid="[engine:junit-jupiter]/[class:days04.boardTEST.BoardServiceTEST]/[method:testSelect()]"/>
-  </testsuite>
-</testrun>

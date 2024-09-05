@@ -128,6 +128,22 @@ public int updateService(BoardDTO dto) {
 	
 
 }
+
+public ArrayList<BoardDTO> searchTService(String searchKeyword) {
+	ArrayList<BoardDTO> list = null;
+	
+	try {
+		list = this.dao.searchT(searchKeyword);
+		 // 2. 로그 기록 작업
+        System.out.println("> 게시글 검색 : 로그 기록 작업...");
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+
+	return list;
+
+}
  
    
    

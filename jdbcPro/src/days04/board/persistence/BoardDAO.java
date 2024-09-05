@@ -39,9 +39,15 @@ public interface BoardDAO {
 	int delete(long seq) throws SQLException;
 
 	//5) 게시글 수정
-	int update(BoardDTO dto) throws SQLException; // int = 리턴값 ,  ***dto = 수정할 내용 객체***  
+	int update(BoardDTO dto) throws SQLException; // int = 리턴값 ,  ***dto = 파라미터, 수정할 내용을 담은 객체***  
 	
+	//6) 게시글 검색 (제목)
+	ArrayList<BoardDTO> searchT(String searchKeyword) throws SQLException; 
 	
+//	//6-2) 게시글 검색 (작성자)
+//	ArrayList<BoardDTO> searchA(String searchKeyword) throws SQLException;
+//	//6-3) 게시글 검색 (제목+내용)
+//	ArrayList<BoardDTO> searchTC(String searchKeyword) throws SQLException;
 	
 }//interface
 

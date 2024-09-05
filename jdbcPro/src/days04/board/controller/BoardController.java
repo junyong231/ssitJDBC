@@ -86,11 +86,61 @@ public class BoardController {
 		일시정지();
 	}
 
-	private void 검색하기() {
-		// TODO Auto-generated method stub
+	private void 검색하기() { //제목, 작성자, 제목+내용 으로 검색가능하지
+		System.out.println("> 검색 타입 입력 (제목 : t , 작성자 : a , 제목+내용 : tc ? ");
+		String searchCondition = this.scanner.next();
+		if (searchCondition.equals("t")) {
+			System.out.println("> 검색할 제목 입력 ? ");
+			String searchKeyword = this.scanner.next();
+			ArrayList<BoardDTO> list = this.service.searchTService(searchKeyword);
+		
 
-	}
+			// 출력담당객체(View) + list
+			System.out.println("\t\t\t  게시판");
+			System.out.println("-------------------------------------------------------------------------");
+			System.out.printf("%s\t%-40s\t%s\t%-10s\t%s\n", 
+					"글번호","글제목","글쓴이","작성일","조회수");
+			System.out.println("-------------------------------------------------------------------------");
+			if (list == null) {
+				System.out.println("\t\t> 게시글 존재 X");   
+			} else {
+				Iterator<BoardDTO> ir = list.iterator();
+				while (ir.hasNext()) {
+					BoardDTO dto =  ir.next();
+					System.out.printf("%d\t%-30s  %s\t%-10s\t%d\n",
+							dto.getSeq(), 
+							dto.getTitle(),
+							dto.getWriter(),
+							dto.getWritedate(),
+							dto.getReaded());   
+				} // while
+			}
 
+			System.out.println("-------------------------------------------------------------------------");      
+			System.out.println("\t\t[1] 2 3 4 5 6 7 8 9 10 NEXT");
+			System.out.println("-------------------------------------------------------------------------");
+			
+			
+			
+			
+			
+			
+		}
+//		}else if (searchCondition.equals("a")) {
+//			System.out.println("> 검색할 작성자 입력 ? ");
+//			String searchKeyword = this.scanner.next();
+//			//this.service.searchA(searchKeyword);
+//			
+//		}else if (searchCondition.equals("a")) {
+//			System.out.println("> 검색할 제목,내용 입력 ? ");
+//			String searchKeyword = this.scanner.next();
+//			//this.service.searchTC(searchKeyword);
+//		}
+		
+	}//검색하기
+
+	
+	
 	private void 삭제하기() {
 		System.out.println("> 삭제하고자 하는 게시글 번호 입력 ? ");
 		long seq = this.scanner.nextLong();
@@ -105,9 +155,7 @@ public class BoardController {
 
 	private void 수정하기() {
 		//원래 게시글 정보 가져오는거 생략 
-		
-		
-		
+
 		
 		System.out.println("> 수정하려는 글의 seq 입력 ? ");
 //		String [] datas =  this.scanner.nextLine().split("\\s*,\\s*");
