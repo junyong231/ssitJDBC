@@ -1,0 +1,23 @@
+package days04;
+
+public class Ex02 {
+
+	public static void main(String[] args) {
+
+		int totalRecord = 136;
+		int currentPage = 1;
+		int numberPerPage = 10;
+		
+		int totalPages = (int) Math.ceil ( (double)totalRecord / numberPerPage );
+		System.out.println( totalPages);
+		
+		int start, end;
+		
+		for (int i = 1; i < totalPages; i++) {
+			
+			System.out.printf("%d 페이지 : start=%d~end=%d\n", i , start, end);
+		}
+
+	}//main
+
+}//class

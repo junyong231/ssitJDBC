@@ -1,0 +1,30 @@
+package days04.boardTEST;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.sql.Connection;
+
+import org.junit.jupiter.api.Test;
+
+import com.util.DBConn;
+
+import days04.board.persistence.BoardDAO;
+import days04.board.persistence.BoardDAOImpl;
+
+class BoardDAOImplTEST {
+
+	BoardDAO dao = null;
+	Connection conn = null;
+	
+	//생성자
+	public BoardDAOImplTEST() {
+		this.conn = DBConn.getConnection();
+		this.dao = new BoardDAOImpl(this.conn);
+	}
+	
+	@Test
+	void test() {
+		fail("Not yet implemented");
+	}
+
+}

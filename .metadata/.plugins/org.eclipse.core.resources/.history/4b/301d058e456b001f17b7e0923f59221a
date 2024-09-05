@@ -1,0 +1,14 @@
+package days04;
+
+public class Ex02 {
+
+	public static void main(String[] args) {
+
+		int totalRecord = 136;
+		int currentPage = 1;
+		
+		
+
+	}//main
+
+}//class

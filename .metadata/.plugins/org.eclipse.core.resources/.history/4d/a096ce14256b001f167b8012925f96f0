@@ -1,0 +1,26 @@
+package days04.board.domain;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 5. 오전 10:17:41
+ * @subject :
+ * @content:
+ * 
+ */
+public class BoardDTO {
+
+	public static void main(String[] args) {
+		 
+		private long seq NUMBER  NOT NULL PRIMARY KEY; 
+		  private String writer ;                                    
+		  private String pwd;                                  
+		  private String email;                         
+		  private String title;                             
+		  writedate DATE DEFAULT sysdate,   
+		  readed NUMBER DEFAULT 0,                               
+		  tag NUMBER(1) NOT NULL ,                                               
+		  content CLOB                                                    
+
+	}//main
+
+}//class

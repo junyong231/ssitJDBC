@@ -1,0 +1,12 @@
+package days04.board.persistence;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 5. 오전 10:25:55
+ * @subject : 페이징 처리 X + 게시글 목록
+ * @content:
+ * 
+ */
+public interface BoardDAO {
+
+}

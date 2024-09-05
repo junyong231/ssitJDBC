@@ -1,0 +1,21 @@
+package days04.board.service;
+
+import java.util.ArrayList;
+
+import days04.board.domain.BoardDTO;
+
+public class BoardService {
+	
+	public ArrayList<BoardDTO> selectService() {
+		//1. DB연동 list
+		//2. 로그 기록 작업
+		//3. 기타.. ( 회원가입시 문자보내기 이런거)
+		// - 트랜잭션 ( 회원가입x인데 문자가지 않게...)
+		
+		
+		
+		
+		
+	}
+	
+}//class

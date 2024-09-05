@@ -1,0 +1,10 @@
+package days04.board.domain;
+
+public class BoardDTO {
+
+	public static void main(String[] args) {
+		
+
+	}//main
+
+}//class

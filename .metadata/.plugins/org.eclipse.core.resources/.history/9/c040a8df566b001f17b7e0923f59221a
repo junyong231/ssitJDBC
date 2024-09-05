@@ -1,0 +1,102 @@
+package days04.board.service;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import days04.board.domain.BoardDTO;
+import days04.board.persistence.BoardDAO;
+import days04.board.persistence.BoardDAOImpl;
+
+//서비스 안에서는 트랜젝션 작업을 한다.
+public class BoardService {
+   
+   private BoardDAO dao = null;
+   
+   // 1. 생성자 DI
+   public BoardService(BoardDAO dao) {
+      super();
+      this.dao = dao;
+   }
+   
+   // 2. Setter DI
+   public void setDao(BoardDAO dao) {
+      this.dao = dao;
+   }
+   
+   
+   // 1. 게시글 목록 서비스
+   public ArrayList<BoardDTO> selectService(int currentPage, int numberPerPage){ 
+      
+      ArrayList<BoardDTO> list = null;
+      
+      // 1. DB연동 list
+      try {
+         ((BoardDAOImpl)this.dao).getConn().setAutoCommit(false);
+         list = this.dao.select(currentPage, numberPerPage);
+         // 2. 로그 기록 작업
+         System.out.println("> 게시글 목록 : 로그 기록 작업...");
+         // 3. 기타...문자
+         System.out.println("> 게시글 목록 : 문자/메일 전송 작업...");
+         ((BoardDAOImpl)this.dao).getConn().commit();
+      } catch (SQLException e) {
+         try {
+            ((BoardDAOImpl)this.dao).getConn().rollback();
+         } catch (SQLException e1) {
+            e1.printStackTrace();
+         }
+         e.printStackTrace();
+      } finally {
+         try {
+            ((BoardDAOImpl)this.dao).getConn().setAutoCommit(true);
+         } catch (SQLException e) {
+            e.printStackTrace();
+         }
+      }
+      
+      
+      return list;
+   }
+
+
+   // 2. 게시글 작성 서비스
+ //스트링이 아니라 객체 dto 넘기기.. 오...
+   
+   public int insertService( BoardDTO dto ) {
+	int rowCount123 = 0;
+	   
+	try {
+		rowCount123 = this.dao.insert(dto);
+        // 2. 로그 기록 작업
+        System.out.println("> 게시글 작성 : 로그 기록 작업..."); //일단 오토커밋 생략,,
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	   
+	   return rowCount123 ;
+	   
+   }
+
+public BoardDTO viewService(int seq) {
+	int rowCount123 = 0;
+	   
+	try {
+		//1. 조회수 1증가
+		
+		//2. 해당 글 정보 가져오기
+		
+		
+		rowCount123 = this.dao.insert(dto);
+        // 3. 로그 기록 작업
+        System.out.println("> 게시글 작성 : 로그 기록 작업..."); //일단 오토커밋 생략,,
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	   
+	   return rowCount123 ;
+	   
+}//viewservice
+ 
+   
+   
+   
+}//class

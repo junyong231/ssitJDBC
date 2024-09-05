@@ -1,0 +1,17 @@
+package days04.board.domain;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 5. 오전 10:17:41
+ * @subject :
+ * @content:
+ * 
+ */
+public class BoardDTO {
+
+	public static void main(String[] args) {
+		
+
+	}//main
+
+}//class

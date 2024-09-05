@@ -1,0 +1,44 @@
+package days04.board.persistence;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import days04.board.domain.BoardDTO;
+
+public class BoardDAOImpl implements BoardDAO {
+	
+	private Connection conn = null; // = DBConn.getConnection 결합력 높아져서 X 의존성 주입(DI)O - Setter, 생성자..
+	private PreparedStatement pstmt = null;
+	private ResultSet rs = null;
+	
+	//생성자 DI
+	
+	public BoardDAOImpl(Connection conn) {
+		super();
+		this.conn = conn;
+	}
+	
+	//Setter DI
+	public void setConn(Connection conn) {
+		this.conn = conn;
+	}
+	
+	@Override
+	public ArrayList<BoardDTO> select() throws SQLException {
+	//싱글톤으로 만들어서 모두가 이거하나 쓰게 만듬 ?
+		
+		String sql = " SELECT seq, title, writer, email, writedate, readed " 
+							+ " FROM tbl_cstVSBoard " 
+							+ " ORDER BY seq DESC " ;
+		
+		
+		return null;
+	}
+
+
+
+
+}//class

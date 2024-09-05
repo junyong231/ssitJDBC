@@ -1,0 +1,17 @@
+package days04;
+
+public class Ex02 {
+
+	public static void main(String[] args) {
+
+		int totalRecord = 136;
+		int currentPage = 1;
+		int numberPerPage = 10;
+		
+		int totalPages = Math.ceil(double)totalRecord / numberPerPage;
+		System.out.println( totalPages);
+		
+
+	}//main
+
+}//class

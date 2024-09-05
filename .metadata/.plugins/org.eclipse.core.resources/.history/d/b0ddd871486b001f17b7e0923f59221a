@@ -1,0 +1,178 @@
+package days04.board.persistence;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+
+import days04.board.domain.BoardDTO;
+
+public class BoardDAOImpl implements BoardDAO {
+	
+	private Connection conn = null; // = DBConn.getConnection 결합력 높아져서 X 의존성 주입(DI)O - Setter, 생성자..
+	private PreparedStatement pstmt = null;
+	private ResultSet rs = null;
+	
+	//생성자 DI
+	
+	public BoardDAOImpl(Connection conn) {
+		super();
+		this.conn = conn;
+	}
+	
+	//Setter DI
+	public void setConn(Connection conn) {
+		this.conn = conn;
+	}
+
+
+	public Connection getConn() {
+		return conn;
+	}
+
+	@Override
+	public ArrayList<BoardDTO> select() throws SQLException {
+	//싱글톤으로 만들어서 모두가 이거하나 쓰게 만듬 ?
+		long seq;
+		String title, writer, email;
+		Date writerdate;
+		int readed;
+		
+		ArrayList<BoardDTO> list = null;
+		
+		String sql = " SELECT seq, title, writer, email, writedate, readed " 
+							+ " FROM tbl_cstVSBoard " 
+							+ " ORDER BY seq DESC " ;
+		
+		//days03 ex01 부서조회에서 긁어옴---
+		BoardDTO bdto = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql); 
+			rs = pstmt.executeQuery();
+			
+			
+			if (rs.next()) {
+				list = new ArrayList<BoardDTO >();
+				do {
+					seq = rs.getLong("seq");
+					title = rs.getString("title");
+					writer = rs.getString("writer");
+					email = rs.getString("email");
+					writerdate = rs.getDate("writedate");
+					readed = rs.getInt("readed");
+					bdto = new BoardDTO().builder()
+							.seq(seq)
+							.title(title)
+							.writedate(writerdate)
+							.writer(writer)
+							.email(email)
+							.readed(readed)
+							.build();
+					list.add(bdto);
+				} while (rs.next());
+			}//if
+
+		 //게시판출력(list);
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} 	finally {
+			try {
+				rs.close();
+				pstmt.close(); //얘도 pstmt로 바꾸고
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}//finally
+		
+		return list;
+	}
+
+	@Override
+	public ArrayList<BoardDTO> select(int currentPage, int numberPerPage) throws SQLException {
+		//싱글톤으로 만들어서 모두가 이거하나 쓰게 만듬 ?
+		long seq;
+		String title, writer, email;
+		Date writerdate;
+		int readed;
+		
+		ArrayList<BoardDTO> list = null;
+		
+		String sql = " SELECT * "
+				+ "FROM ( "
+				+ "    SELECT ROWNUM no , t.* "
+				+ "    FROM( "
+				+ "    SELECT seq, title, writer, email, writedate, readed "
+				+ "    FROM tbl_cstVSBoard  "
+				+ "    ORDER BY seq DESC "
+				+ "    ) t "
+				+ ") b "
+				+ "WHERE no BETWEEN ? AND ? " ;
+		
+		//days03 ex01 부서조회에서 긁어옴---
+		BoardDTO bdto = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql); 
+			rs = pstmt.executeQuery();
+			
+			
+			if (rs.next()) {
+				list = new ArrayList<BoardDTO >();
+				do {
+					seq = rs.getLong("seq");
+					title = rs.getString("title");
+					writer = rs.getString("writer");
+					email = rs.getString("email");
+					writerdate = rs.getDate("writedate");
+					readed = rs.getInt("readed");
+					bdto = new BoardDTO().builder()
+							.seq(seq)
+							.title(title)
+							.writedate(writerdate)
+							.writer(writer)
+							.email(email)
+							.readed(readed)
+							.build();
+					list.add(bdto);
+				} while (rs.next());
+			}//if
+
+		 //게시판출력(list);
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} 	finally {
+			try {
+				rs.close();
+				pstmt.close(); //얘도 pstmt로 바꾸고
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}//finally
+		
+		return list;
+	}
+
+//	private void 게시판출력(ArrayList<BoardDTO> list) {
+//		Iterator<BoardDTO> ir = list.iterator();
+//		System.out.println("-".repeat(30));
+//		//System.out.printf("deptno\tdname\tloc\n");
+//		System.out.println("-".repeat(30));
+//		while (ir.hasNext()) {
+//			BoardDTO bdto =  ir.next();
+//			System.out.printf("%d\t%s\t%s\n"
+//					, bdto.getSeq(), bdto.getTitle(), bdto.getWriter());
+//		}
+//		System.out.println("-".repeat(30));
+//		
+//	}
+
+
+
+
+}//class
