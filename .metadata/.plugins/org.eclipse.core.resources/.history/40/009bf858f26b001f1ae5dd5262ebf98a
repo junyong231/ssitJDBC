@@ -1,0 +1,25 @@
+package days04;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 6. 오전 10:45:19
+ * @subject : 페이징 블럭 처리
+ * @content:
+ * 
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		//페이징블럭 : [1] 2 3 4 5..
+		
+		int currentPage = 1; // 현재 페이지
+		int numberOfPageBlock = 10; // 페이지 버튼 수 ( 10페이지까지 보이게 )
+		int totalRecords = 151; //총 게시글 수
+		int numberPerPage = 10; // 한페이지에 뿌려지는 게시글 수.
+		
+				
+		
+		
+	}//main
+
+}//class

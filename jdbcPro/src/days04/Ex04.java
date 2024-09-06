@@ -1,0 +1,50 @@
+package days04;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 6. 오전 10:45:19
+ * @subject : 페이징 블럭 처리 원리
+ * @content:
+ * 
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		//페이징블럭 : [1] 2 3 4 5..
+		// prev<<              >>next			이거 표시할건지?
+		
+		
+		//알아야 할 것들
+		int currentPage = 1; // 현재 페이지
+		int numberOfPageBlock = 10; // 페이지 버튼 수 ( 10페이지까지 보이게 )
+		int totalRecords = 151; //총 게시글 수
+		int numberPerPage = 10; // 한페이지에 뿌려지는 게시글 수.
+		int totalPages = (int) Math.ceil( (double)totalRecords/numberPerPage ); //16
+		
+	
+		
+		for (currentPage = 1; currentPage <= totalPages; currentPage++) {
+			
+			
+			int start = ( currentPage - 1 ) / numberPerPage * numberOfPageBlock + 1   ;
+			int end = start +numberOfPageBlock -1 ;
+			if (end > totalPages) {
+				end = totalPages;
+			}
+			if (start != 1) {
+				System.out.print("< PREV");
+			}
+
+			for (int i = start; i <= end ; i++) {
+				System.out.print( i==currentPage ? " [ "+i+" ] " : " "+i );
+			}
+			if (end != totalPages) {
+				System.out.print(" NEXT >");
+			}
+			System.out.printf(" \t\t(현재 페이지 : %d ) \n", currentPage);
+		}//for
+		
+		
+	}//main
+
+}//class

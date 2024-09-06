@@ -1,0 +1,53 @@
+package days04.board.vo;
+
+import java.sql.Connection;
+
+import com.util.DBConn;
+
+import days04.board.persistence.BoardDAO;
+import days04.board.persistence.BoardDAOImpl;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 6. 오전 11:25:05
+ * @subject : 페이징 블럭 처리
+ * @content:
+ * 
+ */
+public class PagingVO {
+	
+	private int currentPage = 1;
+	private int start ;
+	private int end;
+	
+	private boolean prev; 
+	private boolean next;
+	
+	public PagingVO( int currentPage, int numberPerPage, int numberOfPageBlock ) {
+		Connection conn = DBConn.getConnection();
+		BoardDAO dao = new BoardDAOImpl(conn);
+		
+		int totalPages = dao.getTotalPages(numberPerPage);
+
+		int start = ( currentPage - 1 ) / numberPerPage * numberOfPageBlock + 1   ;
+		int end = start +numberOfPageBlock -1 ;
+		if (end > totalPages) {
+			end = totalPages;
+		}
+		if (start != 1) {
+			System.out.print("< PREV");
+		}
+
+		for (int i = start; i <= end ; i++) {
+			System.out.print( i==currentPage ? " [ "+i+" ] " : " "+i );
+		}
+		if (end != totalPages) {
+			System.out.print(" NEXT >");
+		}
+		System.out.printf(" \t\t(현재 페이지 : %d ) \n", currentPage);
+		
+
+		
+	}//생성자
+	
+}//class

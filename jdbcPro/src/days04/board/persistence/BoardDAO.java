@@ -44,11 +44,17 @@ public interface BoardDAO {
 	//6) 게시글 검색 (제목)
 	ArrayList<BoardDTO> searchT(String searchKeyword) throws SQLException; 
 	
-//	//6-2) 게시글 검색 (작성자)
-//	ArrayList<BoardDTO> searchA(String searchKeyword) throws SQLException;
+	//6-2) 게시글 검색 (작성자)
+	ArrayList<BoardDTO> searchA(String searchKeyword) throws SQLException;
 //	//6-3) 게시글 검색 (제목+내용)
 //	ArrayList<BoardDTO> searchTC(String searchKeyword) throws SQLException;
-	
+	//6-4) 제목+내용 페이징처리완료 버전
+	public ArrayList<BoardDTO> searchTC(String searchKeyword,int currentPage, int numberPerPage) throws SQLException;
+
+	// 검색용 페이징 처리
+	int getTotalPagesTC(int numberPerPage, String searchKeyword) throws SQLException;
+
+
 }//interface
 
 

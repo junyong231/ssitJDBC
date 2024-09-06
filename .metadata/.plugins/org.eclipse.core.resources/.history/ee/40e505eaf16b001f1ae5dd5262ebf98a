@@ -1,0 +1,19 @@
+package days04;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 6. 오전 10:45:19
+ * @subject : 페이징 블럭 처리
+ * @content:
+ * 
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		//페이징블럭 : [1] 2 3 4 5..
+		
+		int currentPAge = 1; // 현재 페이지
+		
+	}//main
+
+}//class

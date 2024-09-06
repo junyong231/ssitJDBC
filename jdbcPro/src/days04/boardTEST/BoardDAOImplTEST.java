@@ -40,4 +40,19 @@ class BoardDAOImplTEST {
 
 	}
 
+//	@Test
+//	void testSearch() {
+//		//fail("Not yet implemented");
+//		try {
+//			//ArrayList<BoardDTO> list = this.dao.select();
+//			ArrayList<BoardDTO> list = this.dao.searchTC("더미");
+//			list.forEach(dto-> { System.out.println(dto) ;}  ) ;
+//			list = this.dao.select();
+//		} catch (SQLException e) {
+//			
+//			e.printStackTrace();
+//		}
+//
+//	}
+//	
 }

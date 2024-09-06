@@ -1,0 +1,91 @@
+package days04.board.vo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.util.DBConn;
+
+import days04.board.persistence.BoardDAO;
+import days04.board.persistence.BoardDAOImpl;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 6. 오전 11:25:05
+ * @subject : 페이징 블럭 처리
+ * @content:
+ * 
+ */
+public class PagingVO {
+
+	public int currentPage = 1;
+	public int start ;
+	public int end;
+
+	public boolean prev; 
+	public boolean next;
+
+
+	public PagingVO( int currentPage, int numberPerPage, int numberOfPageBlock ) {
+		Connection conn = DBConn.getConnection();
+		BoardDAO dao = new BoardDAOImpl(conn);
+
+
+		try {
+			int totalPages = dao.getTotalPages(numberPerPage);
+			start = ( currentPage - 1 ) / numberPerPage * numberOfPageBlock + 1   ;
+			end = start +numberOfPageBlock -1 ;
+			if (end > totalPages) {
+				end = totalPages;
+			}
+			if (start != 1) {  prev = true;			}
+			if (end != totalPages) {  next = true;			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+
+	}//생성자1
+
+
+	public PagingVO(int currentPage, int numberPerPage, int numberOfPageBlock, String searchKeyword) {
+		Connection conn = DBConn.getConnection();
+		BoardDAO dao = new BoardDAOImpl(conn);
+
+
+		try {
+			int totalPages = dao.getTotalPagesTC(numberPerPage, searchKeyword);
+			start = ( currentPage - 1 ) / numberPerPage * numberOfPageBlock + 1   ;
+			end = start +numberOfPageBlock -1 ;
+			if (end > totalPages) {
+				end = totalPages;
+			}
+			if (start != 1) {  prev = true;			}
+			if (end != totalPages) {  next = true;			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}//생성자2 (검색시)
+
+}//class
+
+
+
+
+
+
+
+/* ex04인줄;
+if (start != 1) {
+	System.out.print("< PREV");
+}
+
+for (int i = start; i <= end ; i++) {
+	System.out.print( i==currentPage ? " [ "+i+" ] " : " "+i );
+}
+if (end != totalPages) {
+	System.out.print(" NEXT >");
+}
+System.out.printf(" \t\t(현재 페이지 : %d ) \n", currentPage);
+ */

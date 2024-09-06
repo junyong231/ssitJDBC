@@ -375,17 +375,223 @@ public class BoardDAOImpl implements BoardDAO {
 
 	}
 
-//	@Override
-//	public BoardDTO searchA(String searchKeyword) throws SQLException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public  ArrayList<BoardDTO>searchA(String searchKeyword) throws SQLException {
+		long seq;
+		String title, writer, email;
+		Date writerdate;
+		int readed;
+		
+		ArrayList<BoardDTO> list = null;
+		
+		String sql = " SELECT *  "
+						+ " FROM tbl_cstvsboard  "
+						+ " WHERE REGEXP_LIKE ( writer, ? , 'i' ) ";
+		
+		//days03 ex01 부서조회에서 긁어옴---
+		BoardDTO bdto = null;
+
+				try {
+					pstmt = conn.prepareStatement(sql); 
+					this.pstmt.setString(1, searchKeyword); 
+					rs = pstmt.executeQuery();
+
+					if (rs.next()) {
+						list = new ArrayList<BoardDTO >();
+						do {
+							seq = rs.getLong("seq");
+							title = rs.getString("title");
+							writer = rs.getString("writer");
+							email = rs.getString("email");
+							writerdate = rs.getDate("writedate");
+							readed = rs.getInt("readed");
+							
+							bdto = new BoardDTO().builder()
+									.seq(seq)
+									.title(title)
+									.writedate(writerdate)
+									.writer(writer)
+									.email(email)
+									.readed(readed)
+									.build();
+							list.add(bdto);
+						} while (rs.next());
+					}//if
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} 	finally {
+					try {
+						rs.close();
+						pstmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}//finally
+
+			return list;
+	}
+
+	/*
+	@Override
+	public  ArrayList<BoardDTO> searchTC(String searchKeyword) throws SQLException {
+		long seq;
+		String title, writer, email;
+		Date writerdate;
+		int readed;
+		
+		ArrayList<BoardDTO> list = null;
+		
+		String sql = " SELECT * "
+						+ " FROM tbl_cstvsboard "
+						+ " WHERE REGEXP_LIKE ( content, ? , 'i' ) OR REGEXP_LIKE ( title, ? , 'i' ) " ;
+		
+		//days03 ex01 부서조회에서 긁어옴---
+		BoardDTO bdto = null;
+
+				try {
+					pstmt = conn.prepareStatement(sql); 
+					this.pstmt.setString(1, searchKeyword); 
+					this.pstmt.setString(2, searchKeyword); 
+					rs = pstmt.executeQuery();
+
+					if (rs.next()) {
+						list = new ArrayList<BoardDTO >();
+						do {
+							seq = rs.getLong("seq");
+							title = rs.getString("title");
+							writer = rs.getString("writer");
+							email = rs.getString("email");
+							writerdate = rs.getDate("writedate");
+							readed = rs.getInt("readed");
+							
+							bdto = new BoardDTO().builder()
+									.seq(seq)
+									.title(title)
+									.writedate(writerdate)
+									.writer(writer)
+									.email(email)
+									.readed(readed)
+									.build();
+							list.add(bdto);
+						} while (rs.next());
+					}//if
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				} 	finally {
+					try {
+						rs.close();
+						pstmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}//finally
+
+			return list;
+	}
+*/
+	
+	@Override
+	public ArrayList<BoardDTO> searchTC(String searchKeyword,int currentPage, int numberPerPage) throws SQLException {
+		long seq;
+		String title, writer, email;
+		Date writerdate;
+		int readed;
+
+		ArrayList<BoardDTO> list = null;
+
+		String sql = " SELECT * "
+				+ "FROM ( "
+				+ "    SELECT ROWNUM no , t.* "
+				+ "    FROM( "
+				+ "    SELECT seq, title, writer, email, writedate, readed "
+				+ "    FROM tbl_cstVSBoard  "
+				+ " 	WHERE REGEXP_LIKE ( content, ? , 'i' ) OR REGEXP_LIKE ( title, ? , 'i' ) " 
+				+ "    ORDER BY seq DESC "
+				+ "    ) t "
+				+ ") b "
+				+ "WHERE no BETWEEN ? AND ? " ; // ? 로 바꿔서 한페이지에 얼마뜰지 선택 가능케 함
+		// 이제 ? 들어갈 파라미터 ㄱㄱ
+
+		int start = (currentPage-1) * numberPerPage + 1;
+		int end = end = start + numberPerPage -1;
+		int totalRecords = getTotalRecords();
+		
+		if (end > totalRecords ) {
+			end = totalRecords ;
+		}
+
+		//days03 ex01 부서조회에서 긁어옴---
+		BoardDTO bdto = null;
+
+		try {
+			pstmt = conn.prepareStatement(sql); 
+			this.pstmt.setString(1, searchKeyword); 
+			this.pstmt.setString(2, searchKeyword); 
+			pstmt.setInt(3, start);
+			pstmt.setInt(4, end);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				list = new ArrayList<BoardDTO >();
+				do {
+					seq = rs.getLong("seq");
+					title = rs.getString("title");
+					writer = rs.getString("writer");
+					email = rs.getString("email");
+					writerdate = rs.getDate("writedate");
+					readed = rs.getInt("readed");
+					bdto = new BoardDTO().builder()
+							.seq(seq)
+							.title(title)
+							.writedate(writerdate)
+							.writer(writer)
+							.email(email)
+							.readed(readed)
+							.build();
+					list.add(bdto);
+				} while (rs.next());
+			}//if
+
+			//게시판출력(list);
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		} 	finally {
+			try {
+				rs.close();
+				pstmt.close(); //얘도 pstmt로 바꾸고
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}//finally
+
+		return list;
+	}
+
+	@Override
+	public int getTotalPagesTC(int numberPerPage, String searchKeyword) throws SQLException {
+		int totalPages = 0;      
+		String sql = "SELECT CEIL(COUNT(*)/?) FROM tbl_cstvsboard WHERE REGEXP_LIKE ( content, ? , 'i' ) OR REGEXP_LIKE ( title, ? , 'i' ) ";
+//		switch (searchCondition) {
+//		case value:
+//			
+//			break;
 //
-//	@Override
-//	public BoardDTO searchTC(String searchKeyword) throws SQLException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+//		default:
+//			break;
+//		}
+		//나는 아예 검색 세개를 찢어놔서... 이건 집에서 ㄱ
+		
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setInt(1, numberPerPage);
+		this.pstmt.setString(2, searchKeyword); 
+		this.pstmt.setString(3, searchKeyword); 
+		this.rs =  this.pstmt.executeQuery();     	
+		if( this.rs.next() ) totalPages = rs.getInt(1);      
+		this.rs.close();
+		this.pstmt.close();            
+		return totalPages;
+	}
 
 
 	

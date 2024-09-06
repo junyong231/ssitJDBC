@@ -1,0 +1,52 @@
+package days04;
+
+/**
+ * @author junyong
+ * @date : 2024. 9. 6. 오전 9:07:40
+ * @subject : [jdbc]
+ * @content:
+ * 
+ */
+public class Ex03 {
+
+	public static void main(String[] args) {
+		
+		//글 상세보기 만들려면?
+		/*
+		 * 1.   Ex01	 ->   BoardController				->			BoardService 			->			BoardDAOImpl			->				Oracle 연동
+		 * 		main()			boardStart()								 < 트랜잭션 처리.. >
+		 * 							ㄴ메뉴출력()
+		 * 							ㄴ메뉴선택() -> 상세보기 (4번) 입력
+		 * 							ㄴ메뉴처리()								
+		 * 									ㄴ상세보기() ->					viewService(150)		->	1) 조회수 증가 처리	int IncreaseReaded
+		 * 									보려는 글번호 입력 150 ->  											2) 게시글 정보 담기   BoardDTO view(seq)	
+		 *																				 
+		 * 	게시글 출력
+		 * BoardDTO = service.viewService(seq)
+		 */
+		
+		
+		/*
+		 * 내가 쓴.. 답..
+		컨트롤러에서 글번호 입력받고 -> 서비스 클래스로 보낸다 -> 서비스 클래스에서 DAO 구현 객체로 글번호 보내고 
+		DAO에서 해당 글번호를 바인딩변수 ?에 넣어 쿼리 실행, 결과값(DTO객체- 글에 대한 정보들 )을 리턴한다 -> 서비스 클래스에서
+		DTO 객체를 받아서 컨트롤러로 리턴. -> 컨트롤러에서 출력 형식에 맞게 출력
+		*/
+		
+		//UML책 시퀀스 다이어그램..?
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}//main
+
+}//class
